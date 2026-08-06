@@ -482,3 +482,13 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Imágenes locales utilizadas para probar la aplicación
+**/Input/*
+
+# Imágenes generadas por el programa
+**/Output/*
+
+# Mantener archivos marcadores si se agregan posteriormente
+!**/Input/.gitkeep
+!**/Output/.gitkeep
