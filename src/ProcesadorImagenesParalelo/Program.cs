@@ -60,12 +60,71 @@ internal class Program
         Console.WriteLine($"Filtro: {selectedFilter}");
         Console.WriteLine($"Modo: {selectedMode}");
         Console.WriteLine();
-        Console.WriteLine(
-            "El procesamiento se implementará en el próximo paso."
-        );
+
+        // En este incremento solamente está disponible
+        // el filtro de escala de grises secuencial.
+        if (selectedFilter != FilterType.Grayscale)
+        {
+            Console.WriteLine(
+                "Ese filtro todavía no está implementado."
+            );
+
+            Console.ReadKey();
+            return;
+        }
+
+        if (selectedMode != ProcessingMode.Sequential)
+        {
+            Console.WriteLine(
+                "Ese modo de procesamiento todavía no está implementado."
+            );
+
+            Console.ReadKey();
+            return;
+        }
 
         Console.WriteLine();
+        Console.WriteLine("INICIANDO PROCESAMIENTO SECUENCIAL");
+        Console.WriteLine("------------------------------------------");
+
+        ProcessingResult result =
+            SequentialImageProcessor.ProcessBatch(
+                imagePaths,
+                paths.SequentialOutputDirectory,
+                selectedFilter
+            );
+
+        // Evitamos una división entre cero.
+        double pixelsPerSecond =
+            result.ProcessingTime.TotalSeconds > 0
+                ? result.ProcessedPixels /
+                  result.ProcessingTime.TotalSeconds
+                : 0;
+
+        Console.WriteLine("RESULTADOS DEL LOTE");
+        Console.WriteLine("------------------------------------------");
+        Console.WriteLine(
+            $"Imágenes procesadas: {result.ProcessedImages}"
+        );
+        Console.WriteLine(
+            $"Imágenes fallidas: {result.FailedImages}"
+        );
+        Console.WriteLine(
+            $"Píxeles procesados: {result.ProcessedPixels:N0}"
+        );
+        Console.WriteLine(
+            $"Tiempo del filtro: " +
+            $"{result.ProcessingTime.TotalMilliseconds:F2} ms"
+        );
+        Console.WriteLine(
+            $"Píxeles por segundo: {pixelsPerSecond:N0}"
+        );
+        Console.WriteLine();
+        Console.WriteLine("Resultados guardados en:");
+        Console.WriteLine(paths.SequentialOutputDirectory);
+        Console.WriteLine();
         Console.WriteLine("Presiona cualquier tecla para finalizar...");
+
         Console.ReadKey();
     }
 }
