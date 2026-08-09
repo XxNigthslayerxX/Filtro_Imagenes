@@ -19,7 +19,8 @@ public static class SequentialImageProcessor
     public static ProcessingResult ProcessBatch(
         string[] imagePaths,
         string outputDirectory,
-        FilterType selectedFilter)
+        FilterType selectedFilter,
+        int filterValue)
     {
         ProcessingResult result = new();
 
@@ -48,7 +49,7 @@ public static class SequentialImageProcessor
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                ApplySelectedFilter(image, selectedFilter);
+                ApplySelectedFilter(image, selectedFilter, filterValue);
 
                 stopwatch.Stop();
 
@@ -86,13 +87,32 @@ public static class SequentialImageProcessor
     /// Ejecuta el filtro seleccionado sobre la imagen.
     /// </summary>
     private static void ApplySelectedFilter(
-        Image<Rgba32> image,
-        FilterType selectedFilter)
+    Image<Rgba32> image,
+    FilterType selectedFilter,
+    int filterValue)
     {
         switch (selectedFilter)
         {
             case FilterType.Grayscale:
                 GrayscaleFilter.ApplySequential(image);
+                break;
+
+            case FilterType.InvertColors:
+                InvertColorsFilter.ApplySequential(image);
+                break;
+
+            case FilterType.Brightness:
+                BrightnessFilter.ApplySequential(
+                    image,
+                    filterValue
+                );
+                break;
+
+            case FilterType.Contrast:
+                ContrastFilter.ApplySequential(
+                    image,
+                    filterValue
+                );
                 break;
 
             default:
