@@ -115,6 +115,12 @@ public static class ConsoleMenu
                 100
             ),
 
+            FilterType.Blur => ReadValueInRange(
+                "Radio de desenfoque (1 a 10): ",
+                1,
+                10
+            ),
+
             _ => 0
         };
     }

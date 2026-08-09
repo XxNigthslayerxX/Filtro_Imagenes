@@ -114,6 +114,12 @@ public static class SequentialImageProcessor
                     filterValue
                 );
                 break;
+            case FilterType.Blur:
+                BlurFilter.ApplySequential(
+                    image,
+                    filterValue
+                );
+                break;
 
             default:
                 throw new NotImplementedException(
