@@ -50,6 +50,8 @@ internal class Program
 
         FilterType selectedFilter = ConsoleMenu.SelectFilter();
 
+        int filterValue = ConsoleMenu.SelectFilterValue(selectedFilter);
+
         ProcessingMode selectedMode =
             ConsoleMenu.SelectProcessingMode();
 
@@ -58,15 +60,20 @@ internal class Program
         Console.WriteLine("------------------------------------------");
         Console.WriteLine($"Imágenes: {imagePaths.Length}");
         Console.WriteLine($"Filtro: {selectedFilter}");
+        if (selectedFilter is FilterType.Brightness or FilterType.Contrast)
+        {
+            Console.WriteLine($"Valor del ajuste: {filterValue}");
+        }
         Console.WriteLine($"Modo: {selectedMode}");
         Console.WriteLine();
 
         // En este incremento solamente está disponible
         // el filtro de escala de grises secuencial.
-        if (selectedFilter != FilterType.Grayscale)
+        // El desenfoque será implementado en el próximo incremento.
+        if (selectedFilter == FilterType.Blur)
         {
             Console.WriteLine(
-                "Ese filtro todavía no está implementado."
+                "El filtro de desenfoque todavía no está implementado."
             );
 
             Console.ReadKey();
@@ -91,7 +98,8 @@ internal class Program
             SequentialImageProcessor.ProcessBatch(
                 imagePaths,
                 paths.SequentialOutputDirectory,
-                selectedFilter
+                selectedFilter,
+                filterValue
             );
 
         // Evitamos una división entre cero.

@@ -94,4 +94,58 @@ public static class ConsoleMenu
         Console.WriteLine("Opción no válida. Inténtelo nuevamente.");
         Console.WriteLine();
     }
+
+    /// <summary>
+    /// Solicita el valor adicional requerido por brillo o contraste.
+    /// Para los demás filtros devuelve cero.
+    /// </summary>
+    public static int SelectFilterValue(FilterType selectedFilter)
+    {
+        return selectedFilter switch
+        {
+            FilterType.Brightness => ReadValueInRange(
+                "Ajuste de brillo (-255 a 255): ",
+                -255,
+                255
+            ),
+
+            FilterType.Contrast => ReadValueInRange(
+                "Ajuste de contraste (-100 a 100): ",
+                -100,
+                100
+            ),
+
+            _ => 0
+        };
+    }
+
+    /// <summary>
+    /// Solicita un número entero dentro del rango indicado.
+    /// </summary>
+    private static int ReadValueInRange(
+        string message,
+        int minimum,
+        int maximum)
+    {
+        while (true)
+        {
+            Console.Write(message);
+
+            string? input = Console.ReadLine();
+
+            bool isValidNumber =
+                int.TryParse(input, out int value);
+
+            if (isValidNumber &&
+                value >= minimum &&
+                value <= maximum)
+            {
+                return value;
+            }
+
+            Console.WriteLine(
+                $"Introduce un número entre {minimum} y {maximum}."
+            );
+        }
+    }
 }
