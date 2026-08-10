@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Advanced;
 
 namespace ProcesadorImagenesParalelo.Filters;
 
@@ -38,6 +39,33 @@ public static class ContrastFilter
                         pixel.A
                     );
                 }
+            }
+        });
+    }
+
+    public static void ApplyParallel(
+    Image<Rgba32> image,
+    int contrast)
+    {
+        double factor =
+            (259.0 * (contrast + 255.0)) /
+            (255.0 * (259.0 - contrast));
+
+        Parallel.For(0, image.Height, y =>
+        {
+            Span<Rgba32> pixelRow =
+                image.DangerousGetPixelRowMemory(y).Span;
+
+            for (int x = 0; x < pixelRow.Length; x++)
+            {
+                Rgba32 pixel = pixelRow[x];
+
+                pixelRow[x] = new Rgba32(
+                    ApplyContrast(pixel.R, factor),
+                    ApplyContrast(pixel.G, factor),
+                    ApplyContrast(pixel.B, factor),
+                    pixel.A
+                );
             }
         });
     }

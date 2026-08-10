@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Advanced;
 
 namespace ProcesadorImagenesParalelo.Filters;
 
@@ -33,4 +34,26 @@ public static class InvertColorsFilter
             }
         });
     }
+
+    public static void ApplyParallel(Image<Rgba32> image)
+    {
+        Parallel.For(0, image.Height, y =>
+        {
+            Span<Rgba32> pixelRow =
+                image.DangerousGetPixelRowMemory(y).Span;
+
+            for (int x = 0; x < pixelRow.Length; x++)
+            {
+                Rgba32 pixel = pixelRow[x];
+
+                pixelRow[x] = new Rgba32(
+                    (byte)(255 - pixel.R),
+                    (byte)(255 - pixel.G),
+                    (byte)(255 - pixel.B),
+                    pixel.A
+                );
+            }
+        });
+    }
 }
+

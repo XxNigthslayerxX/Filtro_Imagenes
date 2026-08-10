@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Advanced;
 
 namespace ProcesadorImagenesParalelo.Filters;
 
@@ -47,6 +48,40 @@ public static class GrayscaleFilter
                         originalPixel.A
                     );
                 }
+            }
+        });
+    }
+
+    /// <summary>
+    /// Convierte la imagen a escala de grises procesando
+    /// varias filas simultáneamente.
+    /// </summary>
+    public static void ApplyParallel(Image<Rgba32> image)
+    {
+        Parallel.For(0, image.Height, y =>
+        {
+            // Cada iteración obtiene una fila diferente.
+            // Como las filas no se superponen, pueden modificarse
+            // simultáneamente sin utilizar lock.
+            Span<Rgba32> pixelRow =
+                image.DangerousGetPixelRowMemory(y).Span;
+
+            for (int x = 0; x < pixelRow.Length; x++)
+            {
+                Rgba32 originalPixel = pixelRow[x];
+
+                byte grayValue = (byte)(
+                    originalPixel.R * 0.299 +
+                    originalPixel.G * 0.587 +
+                    originalPixel.B * 0.114
+                );
+
+                pixelRow[x] = new Rgba32(
+                    grayValue,
+                    grayValue,
+                    grayValue,
+                    originalPixel.A
+                );
             }
         });
     }

@@ -71,29 +71,63 @@ internal class Program
 
         // En este incremento solamente está disponible
         // el filtro de escala de grises secuencial.
-       
 
-        if (selectedMode != ProcessingMode.Sequential)
+        ProcessingResult result;
+        string outputDirectory;
+
+        switch (selectedMode)
         {
-            Console.WriteLine(
-                "Ese modo de procesamiento todavía no está implementado."
-            );
+            case ProcessingMode.Sequential:
+                Console.WriteLine();
+                Console.WriteLine(
+                    "INICIANDO PROCESAMIENTO SECUENCIAL"
+                );
+                Console.WriteLine("------------------------------------------");
 
-            Console.ReadKey();
-            return;
+                outputDirectory =
+                    paths.SequentialOutputDirectory;
+
+                result = SequentialImageProcessor.ProcessBatch(
+                    imagePaths,
+                    outputDirectory,
+                    selectedFilter,
+                    filterValue
+                );
+
+                break;
+
+            case ProcessingMode.Parallel:
+                Console.WriteLine();
+                Console.WriteLine(
+                    "INICIANDO PROCESAMIENTO PARALELO"
+                );
+                Console.WriteLine("------------------------------------------");
+
+                outputDirectory =
+                    paths.ParallelOutputDirectory;
+
+                result = ParallelImageProcessor.ProcessBatch(
+                    imagePaths,
+                    outputDirectory,
+                    selectedFilter,
+                    filterValue
+                );
+
+                break;
+
+            case ProcessingMode.Comparison:
+                Console.WriteLine();
+                Console.WriteLine(
+                    "La comparación se implementará posteriormente."
+                );
+
+                Console.ReadKey();
+                return;
+
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
-        Console.WriteLine();
-        Console.WriteLine("INICIANDO PROCESAMIENTO SECUENCIAL");
-        Console.WriteLine("------------------------------------------");
-
-        ProcessingResult result =
-            SequentialImageProcessor.ProcessBatch(
-                imagePaths,
-                paths.SequentialOutputDirectory,
-                selectedFilter,
-                filterValue
-            );
 
         // Evitamos una división entre cero.
         double pixelsPerSecond =
@@ -122,7 +156,7 @@ internal class Program
         );
         Console.WriteLine();
         Console.WriteLine("Resultados guardados en:");
-        Console.WriteLine(paths.SequentialOutputDirectory);
+        Console.WriteLine(outputDirectory);
         Console.WriteLine();
         Console.WriteLine("Presiona cualquier tecla para finalizar...");
 

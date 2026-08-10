@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Advanced;
 
 namespace ProcesadorImagenesParalelo.Filters;
 
@@ -101,5 +102,83 @@ public static class BlurFilter
                 }
             }
         );
+    }
+
+    /// <summary>
+    /// Desenfoca la imagen procesando varias filas simultáneamente.
+    /// </summary>
+    public static void ApplyParallel(
+        Image<Rgba32> image,
+        int radius)
+    {
+        // Todas las tareas leen desde esta copia inmutable.
+        using Image<Rgba32> sourceImage = image.Clone();
+
+        Parallel.For(0, image.Height, y =>
+        {
+            Span<Rgba32> destinationRow =
+                image.DangerousGetPixelRowMemory(y).Span;
+
+            for (int x = 0; x < image.Width; x++)
+            {
+                int redSum = 0;
+                int greenSum = 0;
+                int blueSum = 0;
+                int neighborCount = 0;
+
+                for (
+                    int offsetY = -radius;
+                    offsetY <= radius;
+                    offsetY++)
+                {
+                    int neighborY = y + offsetY;
+
+                    if (neighborY < 0 ||
+                        neighborY >= sourceImage.Height)
+                    {
+                        continue;
+                    }
+
+                    // La fila de origen solo se utiliza para lectura.
+                    Span<Rgba32> sourceRow =
+                        sourceImage
+                            .DangerousGetPixelRowMemory(neighborY)
+                            .Span;
+
+                    for (
+                        int offsetX = -radius;
+                        offsetX <= radius;
+                        offsetX++)
+                    {
+                        int neighborX = x + offsetX;
+
+                        if (neighborX < 0 ||
+                            neighborX >= sourceImage.Width)
+                        {
+                            continue;
+                        }
+
+                        Rgba32 neighborPixel =
+                            sourceRow[neighborX];
+
+                        redSum += neighborPixel.R;
+                        greenSum += neighborPixel.G;
+                        blueSum += neighborPixel.B;
+
+                        neighborCount++;
+                    }
+                }
+
+                Rgba32 originalPixel =
+                    sourceImage[x, y];
+
+                destinationRow[x] = new Rgba32(
+                    (byte)(redSum / neighborCount),
+                    (byte)(greenSum / neighborCount),
+                    (byte)(blueSum / neighborCount),
+                    originalPixel.A
+                );
+            }
+        });
     }
 }
