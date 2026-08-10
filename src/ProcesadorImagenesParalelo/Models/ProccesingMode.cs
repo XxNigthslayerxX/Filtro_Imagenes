@@ -7,5 +7,6 @@ public enum ProcessingMode
 {
     Sequential = 1,
     Parallel = 2,
-    Comparison = 3
+    Recursive = 3,
+    Comparison = 4
 }
