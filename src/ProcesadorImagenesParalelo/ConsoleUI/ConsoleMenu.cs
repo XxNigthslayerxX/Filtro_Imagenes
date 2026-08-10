@@ -63,9 +63,9 @@ public static class ConsoleMenu
             Console.WriteLine("SELECCIONE EL MODO DE PROCESAMIENTO");
             Console.WriteLine("------------------------------------------");
             Console.WriteLine("1. Secuencial");
-            Console.WriteLine("2. Paralelo");
-            Console.WriteLine("3. Comparar ambos modos");
-            Console.Write("Opción: ");
+            Console.WriteLine("2. Paralelo por filas");
+            Console.WriteLine("3. División recursiva");
+            Console.WriteLine("4. Comparar los modos");
 
             string? input = Console.ReadLine();
 

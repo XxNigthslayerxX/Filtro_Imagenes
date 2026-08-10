@@ -115,6 +115,25 @@ internal class Program
 
                 break;
 
+            case ProcessingMode.Recursive:
+                Console.WriteLine();
+                Console.WriteLine(
+                    "INICIANDO PROCESAMIENTO RECURSIVO"
+                );
+                Console.WriteLine("------------------------------------------");
+
+                outputDirectory =
+                    paths.RecursiveOutputDirectory;
+
+                result = RecursiveImageProcessor.ProcessBatch(
+                    imagePaths,
+                    outputDirectory,
+                    selectedFilter,
+                    filterValue
+                );
+
+                break;
+
             case ProcessingMode.Comparison:
                 Console.WriteLine();
                 Console.WriteLine(
