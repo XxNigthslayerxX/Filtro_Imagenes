@@ -9,6 +9,7 @@ public class ApplicationPaths
     public string SequentialOutputDirectory { get; }
     public string ParallelOutputDirectory { get; }
     public string RecursiveOutputDirectory { get; }
+    public string ParallelBatchOutputDirectory { get; }
 
     public ApplicationPaths(string baseDirectory)
     {
@@ -32,6 +33,11 @@ public class ApplicationPaths
             baseDirectory,
             "Output",
             "Recursive"
+        );
+        ParallelBatchOutputDirectory = Path.Combine(
+            baseDirectory,
+            "Output",
+            "ParallelBatch"
 );
     }
 
@@ -44,5 +50,6 @@ public class ApplicationPaths
         Directory.CreateDirectory(SequentialOutputDirectory);
         Directory.CreateDirectory(ParallelOutputDirectory);
         Directory.CreateDirectory(RecursiveOutputDirectory);
+        Directory.CreateDirectory(ParallelBatchOutputDirectory);
     }
 }
