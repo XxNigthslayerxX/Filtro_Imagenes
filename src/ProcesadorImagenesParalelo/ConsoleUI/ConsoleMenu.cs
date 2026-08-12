@@ -65,7 +65,8 @@ public static class ConsoleMenu
             Console.WriteLine("1. Secuencial");
             Console.WriteLine("2. Paralelo por filas");
             Console.WriteLine("3. División recursiva");
-            Console.WriteLine("4. Comparar los modos");
+            Console.WriteLine("4. Lote paralelo");
+            Console.WriteLine("5. Comparar los modos");
 
             string? input = Console.ReadLine();
 

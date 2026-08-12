@@ -134,6 +134,27 @@ internal class Program
 
                 break;
 
+            case ProcessingMode.ParallelBatch:
+                Console.WriteLine();
+                Console.WriteLine(
+                    "INICIANDO PROCESAMIENTO PARALELO DEL LOTE"
+                );
+                Console.WriteLine(
+                    "------------------------------------------"
+                );
+
+                outputDirectory =
+                    paths.ParallelBatchOutputDirectory;
+
+                result = ParallelBatchImageProcessor.ProcessBatch(
+                    imagePaths,
+                    outputDirectory,
+                    selectedFilter,
+                    filterValue
+                );
+
+                break;
+
             case ProcessingMode.Comparison:
                 Console.WriteLine();
                 Console.WriteLine(
