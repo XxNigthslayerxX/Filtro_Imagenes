@@ -158,7 +158,25 @@ internal class Program
             case ProcessingMode.Comparison:
                 Console.WriteLine();
                 Console.WriteLine(
-                    "La comparación se implementará posteriormente."
+                    "INICIANDO COMPARACIÓN DE RENDIMIENTO"
+                );
+                Console.WriteLine(
+                    "------------------------------------------"
+                );
+
+                List<PerformanceMeasurement> measurements =
+                    PerformanceComparisonRunner.Run(
+                        imagePaths,
+                        paths,
+                        selectedFilter,
+                        filterValue
+                    );
+
+                PerformanceReportPrinter.Print(measurements);
+
+                Console.WriteLine();
+                Console.WriteLine(
+                    "Presiona cualquier tecla para finalizar..."
                 );
 
                 Console.ReadKey();
